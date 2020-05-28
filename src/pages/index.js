@@ -1,50 +1,48 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { useStaticQuery } from "gatsby"
 import Card from "gatsby-plugin-material-ui"
 import { default as React, useEffect } from "react"
 import Layout from "../components/layout"
-import {  } from "graphql"
+import { graphql } from "graphql"
+import {useQuery} from '@apollo/react-hooks';
 import gql from "graphql-tag"
 
-const { createApolloFetch } = require('apollo-fetch');
-
-const fetch = createApolloFetch({
-  url: 'https://api.github.com/graphql',
-});
-
-fetch({
-  query: `{
+const GET_REPO = gql
+`query {
     organization(login: "debtcollective") {
-        login
-        name
-        location
-        id
-        avatarUrl
-        websiteUrl
-        url
-        repositories(first: 100) {
-          nodes {
-            name
-            id
-            createdAt
-            description
-            updatedAt
-            url
-            projectsUrl
-          }
+      login
+      name
+      location
+      id
+      avatarUrl
+      websiteUrl
+      url
+      repositories(first: 100) {
+        nodes {
+          name
+          id
+          createdAt
+          description
+          updatedAt
+          url
+          projectsUrl
         }
       }
-    }`,
-}).then(res => {
-  console.log(res.data);
-});
-
-
+    }
+  }
+`;
 
 const IndexPage = () => {
+  const { loading, error, data } = useQuery(GET_REPO);
+
+  if (loading) return "Loading...";
+  if (error) return `Error! ${error.message}`;
+
   return (
     <Layout>
       <Card>
-  {fetch()}
+        {data.GET_REPO.map(repo => {
+          return console.log(repo);
+        })}
       </Card>
     </Layout>
   )
