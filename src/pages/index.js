@@ -1,21 +1,53 @@
-import React from "react"
-import { Link } from "gatsby"
-
+import { graphql, useStaticQuery } from "gatsby"
+import Card from "gatsby-plugin-material-ui"
+import { default as React, useEffect } from "react"
 import Layout from "../components/layout"
-import Image from "../components/image"
-import SEO from "../components/seo"
+import {  } from "graphql"
+import gql from "graphql-tag"
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+const { createApolloFetch } = require('apollo-fetch');
+
+const fetch = createApolloFetch({
+  url: 'https://api.github.com/graphql',
+});
+
+fetch({
+  query: `{
+    organization(login: "debtcollective") {
+        login
+        name
+        location
+        id
+        avatarUrl
+        websiteUrl
+        url
+        repositories(first: 100) {
+          nodes {
+            name
+            id
+            createdAt
+            description
+            updatedAt
+            url
+            projectsUrl
+          }
+        }
+      }
+    }`,
+}).then(res => {
+  console.log(res.data);
+});
+
+
+
+const IndexPage = () => {
+  return (
+    <Layout>
+      <Card>
+  {fetch()}
+      </Card>
+    </Layout>
+  )
+}
 
 export default IndexPage
