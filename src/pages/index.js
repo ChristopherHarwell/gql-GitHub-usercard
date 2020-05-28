@@ -6,9 +6,9 @@ import { graphql } from "graphql"
 import {useQuery} from '@apollo/react-hooks';
 import gql from "graphql-tag"
 
-const GET_REPO = gql
+const GET_REPO = graphql
 `query {
-    organization(login: "debtcollective") {
+    Organization(login: "debtcollective") {
       login
       name
       location
